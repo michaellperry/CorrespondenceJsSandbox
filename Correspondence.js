@@ -12,7 +12,9 @@ function Community(url) {
                             cards: function (cardAdapter) {
                                 cardAdapter.added({
                                     text: function (textAdapter) {
-                                        textAdapter.set("Move the thing");
+                                        textAdapter.added({
+                                            value: "Move the thing"
+                                        });
                                     }
                                 });
                             }

@@ -9,8 +9,8 @@ function load(individualMemento) {
             cardList.append(card.view);
 
             card.text({
-                set: function (text) {
-                    card.view.text(text);
+                added: function (candidate) {
+                    card.view.text(candidate.value);
                 }
             });
         };
