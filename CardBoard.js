@@ -46,8 +46,8 @@ function load(individualMemento) {
             project.projectListView = $("#projects").append("<li>");
 
             project.name({
-                set: function (name) {
-                    project.projectListView.text(name);
+                added: function (candidate) {
+                    project.projectListView.text(candidate.value);
                 }
             });
 
