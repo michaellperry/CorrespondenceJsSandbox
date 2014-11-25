@@ -4,12 +4,13 @@ function load(individualMemento) {
 
     function cardAdapter(column) {
         this.added = function (card) {
-            // Add a <div> to the column <div>
-            card.view = addCardDiv(card, column.cardListView);
+            var cardList = column.cardListView.children("ul");
+            card.view = $("<li>");
+            cardList.append(card.view);
 
             card.text({
                 set: function (text) {
-                    setCardText(card.view, text);
+                    card.view.text(text);
                 }
             });
         };
@@ -21,14 +22,15 @@ function load(individualMemento) {
 
     function columnAdapter(project) {
         this.added = function (column) {
-            // Add a <div> to the #board <div>
-            column.cardListView = addCardList(column);
-
-            // Respond to button click to add a new card.
-            column.newCard = function () {
+            column.cardListView = $("<div>");
+            $("#board").append(column.cardListView);
+            column.cardListView.append("<ul>");
+            var newCardButton = $("<input type='button' value='New Card'>");
+            column.cardListView.append(newCardButton);
+            newCardButton.click(function () {
                 var card = community.newCard(project, new Date());
                 community.newCardColumn(card, column, []);
-            };
+            });
 
             column.cards(new cardAdapter(column));
         };
@@ -41,8 +43,7 @@ function load(individualMemento) {
 
     individual.projects({
         added: function (project) {
-            // Add a <li> to the #projects <ul>
-            project.projectListView = addProjectLi(project);
+            project.projectListView = $("#projects").append("<li>");
 
             project.name({
                 set: function (name) {

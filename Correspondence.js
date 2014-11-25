@@ -22,4 +22,16 @@ function Community(url) {
             }
         };
     };
+
+    this.newCard = function (project, created) {
+        return {
+
+        };
+    };
+
+    this.newCardColumn = function (card, column, prior) {
+        return {
+
+        };
+    };
 }
