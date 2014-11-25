@@ -9,9 +9,16 @@ function Card() {
 };
 
 function Column() {
+    this._columnAdapters = [];
+
     this.cards = function (cardAdapter) {
+        this._columnAdapters.push(cardAdapter);
         cardAdapter.added(new Card());
     };
+};
+
+function CardColumn(card, column, prior) {
+    
 };
 
 function ProjectName(value) {
@@ -40,14 +47,14 @@ function Community(url) {
     };
 
     this.newCard = function (project, created) {
-        return {
-
-        };
+        return new Card();
     };
 
     this.newCardColumn = function (card, column, prior) {
-        return {
-
-        };
+        for (index in column._columnAdapters) {
+            var columnAdapter = column._columnAdapters[index];
+            columnAdapter.added(card);
+        }
+        return new CardColumn(card, column, prior);
     };
 }
