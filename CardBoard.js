@@ -2,6 +2,16 @@ function load(individualMemento) {
     var community = new Community("api/community");
     var individual = community.load(individualMemento);
 
+    var project = community.newProject(new Date());
+    var member = community.newMember(individual, project);
+    var projectName = community.newProjectName(project, "Start a war with Gilder", []);
+    var column = community.newColumn(project);
+    var columnName = community.newColumnName(column, "To Do", []);
+    var columnOrdinal = community.newColumnOrdinal(column, 1, []);
+    var card = community.newCard(project, new Date());
+    var cardColumn = community.newCardColumn(card, column, []);
+    var cardText = community.newCardText(card, "Move the thing", []);
+
     function cardAdapter(column) {
         this.added = function (card) {
             var cardList = column.cardListView.children("ul");
@@ -60,14 +70,4 @@ function load(individualMemento) {
             removeProjectLi(project.projectListView);
         }
     });
-
-    var project = community.newProject(new Date());
-    var member = community.newMember(individual, project);
-    var projectName = community.newProjectName(project, "Start a war with Gilder", []);
-    var column = community.newColumn(project);
-    var columnName = community.newColumnName(column, "To Do", []);
-    var columnOrdinal = community.newColumnOrdinal(column, 1, []);
-    var card = community.newCard(project, new Date());
-    var cardColumn = community.newCardColumn(card, column, []);
-    var cardText = community.newCardText(card, "Move the thing", []);
 }
