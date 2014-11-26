@@ -1,3 +1,20 @@
+function Results() {
+    this._facts = [];
+    this._adapters = [];
+}
+
+Results.prototype.addAdapter = function (adapter) {
+    this._adapters.push(adapter);
+};
+
+Results.prototype.addFact = function (fact) {
+    this._facts.push(fact);
+    for (index in this._adapters) {
+        var adapter = this._adapters[index];
+        adapter.added(fact);
+    }
+};
+
 function CardText(card, value, prior) {
     this.value = value;
 };
@@ -7,11 +24,11 @@ function CardColumn(card, column, prior) {
 };
 
 function Card(project, created) {
-    this._textAdapters = [];
+    this._text = new Results();
 };
 
 Card.prototype.text = function (textAdapter) {
-    this._textAdapters.push(textAdapter);
+    this._text.addAdapter(textAdapter);
 };
 
 function ColumnName(column, value, prior) {
@@ -23,11 +40,11 @@ function ColumnOrdinal(column, value, prior) {
 };
 
 function Column(project) {
-    this._cardAdapters = [];
+    this._cards = new Results();
 };
 
 Column.prototype.cards = function (cardAdapter) {
-    this._cardAdapters.push(cardAdapter);
+    this._cards.addAdapter(cardAdapter);
 };
 
 function Member(individual, project) {
@@ -39,24 +56,24 @@ function ProjectName(project, value, prior) {
 };
 
 function Project(created) {
-    this._nameAdapters = [];
-    this._columnAdapters = [];
+    this._name = new Results();
+    this._columns = new Results();
 };
 
 Project.prototype.name = function (nameAdapter) {
-    this._nameAdapters.push(nameAdapter);
+    this._name.addAdapter(nameAdapter);
 };
 
 Project.prototype.columns = function (columnAdapter) {
-    this._columnAdapters.push(columnAdapter);
+    this._columns.addAdapter(columnAdapter);
 };
 
 function Individual() {
-    this._projectAdapters = [];
+    this._projects = new Results();
 };
 
 Individual.prototype.projects = function (projectAdapter) {
-    this._projectAdapters.push(projectAdapter);
+    this._projects.addAdapter(projectAdapter);
 };
 
 function Community(url) {
@@ -77,27 +94,18 @@ Community.prototype.newProject = function (created) {
 
 Community.prototype.newProjectName = function (project, value, prior) {
     var projectName = new ProjectName(project, value, prior);
-    for (index in project._nameAdapters) {
-        var nameAdapter = project._nameAdapters[index];
-        nameAdapter.added(projectName);
-    }
+    project._name.addFact(projectName);
     return projectName;
 };
 
 Community.prototype.newMember = function (individual, project) {
-    for (index in individual._projectAdapters) {
-        var projectAdapter = individual._projectAdapters[index];
-        projectAdapter.added(project);
-    }
+    individual._projects.addFact(project);
     return new Member(individual, project);
 };
 
 Community.prototype.newColumn = function (project) {
     var column = new Column(project);
-    for (index in project._columnAdapters) {
-        var columnAdapter = project._columnAdapters[index];
-        columnAdapter.added(column);
-    }
+    project._columns.addFact(column);
     return column;
 };
 
@@ -114,18 +122,12 @@ Community.prototype.newCard = function (project, created) {
 };
 
 Community.prototype.newCardColumn = function (card, column, prior) {
-    for (index in column._cardAdapters) {
-        var cardAdapter = column._cardAdapters[index];
-        cardAdapter.added(card);
-    }
+    column._cards.addFact(card);
     return new CardColumn(card, column, prior);
 };
 
 Community.prototype.newCardText = function (card, value, prior) {
     var cardText = new CardText(card, value, prior);
-    for (index in card._textAdapters) {
-        var textAdapter = card._textAdapters[index];
-        textAdapter.added(cardText);
-    }
+    card._text.addFact(cardText);
     return cardText;
 };
