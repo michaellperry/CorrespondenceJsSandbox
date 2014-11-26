@@ -34,6 +34,7 @@ function load(individualMemento) {
         this.added = function (column) {
             column.cardListView = $("<div>");
             $("#board").append(column.cardListView);
+            column.cardListView.append("<h3>");
             column.cardListView.append("<ul>");
             var newCardButton = $("<input type='button' value='New Card'>");
             column.cardListView.append(newCardButton);
@@ -44,6 +45,11 @@ function load(individualMemento) {
             });
 
             column.cards(new cardAdapter(column));
+            column.name({
+                added: function (candidate) {
+                    column.cardListView.children("h3").text(candidate.value);
+                }
+            });
         };
 
         this.removed = function (column) {

@@ -24,10 +24,15 @@ function ColumnOrdinal(column, value, prior) {
 
 function Column(project) {
     this._cards = new Results();
+    this._name = new Results();
 };
 
 Column.prototype.cards = function (cardAdapter) {
     this._cards.addAdapter(cardAdapter);
+};
+
+Column.prototype.name = function (cardNameAdapter) {
+    this._name.addAdapter(cardNameAdapter);
 };
 
 function Member(individual, project) {
@@ -90,7 +95,9 @@ Community.prototype.newColumn = function (project) {
 };
 
 Community.prototype.newColumnName = function (column, value, prior) {
-    return new ColumnName(column, value, prior);
+    var columnName = new ColumnName(column, value, prior);
+    column._name.addFact(columnName);
+    return columnName;
 };
 
 Community.prototype.newColumnOrdinal = function (column, value, prior) {
